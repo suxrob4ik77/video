@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talabalar Ro‘yxati</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .list-group-item:hover { background-color: #e9ecef; cursor: pointer; }
+        .card { border-radius: 10px; box-shadow: 0px 4px 8px rgba(0,0,0,0.1); }
+        .card img { border-top-left-radius: 10px; border-top-right-radius: 10px; height: 200px; object-fit: cover; }
+        .navbar { background-color: #343a40 !important; }
+        .navbar-brand, .nav-link { color: #fff !important; }
+    </style>
+</head>
+<body>
+
+    {% include "navbar.html" %}
+
+    <div class="container mt-4">
+        <div class="row">
+
+            <!-- Fanlar ro‘yxati -->
+            <div class="col-md-4">
+                <h3>Fanlar</h3>
+                <ul class="list-group">
+                    {% for fan in fanlar %}
+                        <li class="list-group-item">
+                            <a href="{% url 'fanlar_detail' fan.id %}" class="text-decoration-none text-dark">{{ fan.title }}</a>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">Hozircha fanlar mavjud emas</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Studentlar ro‘yxati -->
+            <div class="col-md-8">
+                <h3>Studentlar</h3>
+                <div class="row">
+                    {% for student in student %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                {% if student.photo %}
+                                    <img src="{{ student.photo.url }}" alt="{{ student.name }}" class="card-img-top">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/150" alt="No image available" class="card-img-top">
+                                {% endif %}
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ student.name }} {{ student.surname }}</h5>
+
+                                    <!-- Fanlarni chiqarish -->
+                                    <p class="text-muted">
+                                        {% for fan in student.fanlar.all %}
+                                            {{ fan.title }}{% if not forloop.last %}, {% endif %}
+                                        {% empty %}
+                                            Fanlar mavjud emas
+                                        {% endfor %}
+                                    </p>
+
+                                    <a href="{% url 'student_detail' student.id %}" class="btn btn-primary">Batafsil...</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">Hozircha studentlar mavjud emas</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
